@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Chat;
 use App\Models\Message;
+use Auth;
 use Illuminate\Http\Request;
 use App\Models\User;
 class ChatController extends Controller
@@ -115,4 +116,18 @@ $messages = [];
         return redirect()->route('index',['chat_id'=>$chat->id]);
     }
     
+    public function emptyChat($chat_id){
+        $chat = Chat::findOrFail($chat_id);
+        //Eliminar todos los chat asociados con ese chat
+        $chat->messages()->delete();
+        //Redirigir devuelta a la vista de los chats
+        return redirect()->route('index')->with('success','Chat vaciado con exito!');
+    }
+
+    public function deleteUser(){
+        $users = Auth::user();
+        $users->delete();
+        Auth::logout();
+        return redirect()->route('auth');
+    }
 }

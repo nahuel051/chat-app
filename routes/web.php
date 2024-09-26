@@ -30,4 +30,7 @@ Route::middleware('auth')->group(function(){
     Route::get('/index',[ChatController::class, 'showChatForm'])->name('index');
     // Ruta para enviar mensajes
     Route::post('/send-message', [ChatController::class, 'sendMessage'])->name('send.message');
+    //Ruta para eliminar chat
+    Route::delete('/chat/{chat_id}/empty', [ChatController::class, 'emptyChat'])->name('chat.empty');
+    Route::delete('delete-user', [ChatController::class, 'deleteUser'])->name('delete.user');
 });

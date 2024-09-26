@@ -10,6 +10,12 @@
     @csrf
     <button type="submit">Cerrar Sesión</button>
 </form>
+<form action="{{ route('delete.user') }}" method="POST" onsubmit="return confirm('¿Estás seguro de que deseas eliminar tu cuenta? Esta acción no se puede deshacer.')">
+    @csrf
+    @method('DELETE')
+    
+    <button type="submit">Eliminar cuenta</button>
+</form>
 <b>{{ auth()->user()->name }}</b>
     <!-- Lista de usuarios -->
     <h3>Usuarios disponibles para chatear</h3>
@@ -55,6 +61,12 @@
     $selectedChat->userTwo->name: Si el usuario autenticado es el primer participante (user_one_id), se muestra el nombre del segundo participante del chat (userTwo).
     $selectedChat->userOne->name: Si el usuario autenticado no es el primer participante (es el segundo, user_two_id), entonces se muestra el nombre del primer participante del chat (userOne). -->
     <h3>Chat con {{ $selectedChat->user_one_id == auth()->id() ? $selectedChat->userTwo->name : $selectedChat->userOne->name }}</h3>
+    <!-- Botón para vaciar el chat -->
+    <form action="{{ route('chat.empty', $selectedChat->id) }}" method="POST" onsubmit="return confirm('¿Estás seguro de que deseas vaciar este chat?');">
+            @csrf
+            @method('DELETE')
+            <button type="submit">Vaciar Chat</button>
+        </form>
 
     <!-- Mostrar mensajes -->
     <div class="chat-box">
