@@ -22,7 +22,11 @@ class AuthController extends Controller
             'email'=>$request->email,
             'password'=>$request->password,
         ]);
-        return redirect()->route('auth');
+        // return redirect()->route('auth');
+        //Devuelve uan respuesta JSON de exito.
+        if($request->ajax()){
+            return response()->json(['success'=>true]);
+        }
     }
     public function login(Request $request){
         $request->validate([
@@ -30,9 +34,11 @@ class AuthController extends Controller
             'password' => 'required|string',
         ]);
         if(Auth::attempt(['email' => $request->email, 'password' => $request->password])){
-            return redirect()->route('index');
+            // return redirect()->route('index');
+            return response()->json(['success' => true]);
         }
-        return back()->withErrors(['error' => 'Credenciales erroneas!']);
+        // return back()->withErrors(['error' => 'Credenciales erroneas!']);
+        return response()->json(['errors' => ['email' => ['Las credenciales no coinciden con nuestros registros.']]], 422);
     }
 
     //Cerrar sesión
