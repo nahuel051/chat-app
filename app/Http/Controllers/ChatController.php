@@ -63,8 +63,31 @@ $messages = [];
         }
     }
 
-    return view('index', compact('users', 'chats', 'selectedChat', 'messages'));
+
+return view('index', compact('users', 'chats', 'selectedChat', 'messages'));
 }
+public function showSearchForm() {
+    // Cargar todos los usuarios excepto el autenticado al iniciar la vista
+    $users = User::where('id', '!=', auth()->id())->get();
+
+    // Retornar la vista completa de search.blade.php con la lista inicial de usuarios
+    return view('search', compact('users'));
+}
+
+public function searchUsers(Request $request) {
+    // Capturar el valor de la búsqueda
+    $query = $request->input('query');
+
+    // Obtener usuarios cuyo nombre coincida con la búsqueda, excepto el autenticado
+    $users = User::where('id', '!=', auth()->id())
+                ->where('name', 'like', '%' . $query . '%')
+                ->get();
+
+    // Retornar solo la vista parcial con los usuarios filtrados
+    return view('partials.users_list', compact('users'));
+}
+
+
 // El valor de $request->user_id proviene de los datos enviados en la solicitud (request) cuando:
 // El usuario selecion a otro usuario de la lista:
 // <ul>
@@ -128,6 +151,7 @@ $messages = [];
     //Retornar la vista parcial con los mensajes
     return view('partials.chat-messages', compact('messages'));
 }
+
 
     public function emptyChat($chat_id){
         $chat = Chat::findOrFail($chat_id);

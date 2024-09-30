@@ -1,34 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chat</title>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-</head>
+@include('header')
 <body>
-<form action="{{ route('logout') }}" method="POST">
-    @csrf
-    <button type="submit">Cerrar Sesión</button>
-</form>
-<form action="{{ route('delete.user') }}" method="POST" onsubmit="return confirm('¿Estás seguro de que deseas eliminar tu cuenta? Esta acción no se puede deshacer.')">
-    @csrf
-    @method('DELETE')
-    
-    <button type="submit">Eliminar cuenta</button>
-</form>
+@include('sidebar')
 <b>{{ auth()->user()->name }}</b>
-    <!-- Lista de usuarios -->
-    <h3>Usuarios disponibles para chatear</h3>
-    <ul>
-        @foreach($users as $user)
-        <!-- ['user_id' => $user->id]: Este arreglo especifica los parámetros que se pasarán en la URL. En este caso, se está enviando el parámetro user_id, que tiene el valor de $user->id, es decir, el ID del usuario iterado en el bucle http://tu-aplicacion.com/index?user_id=3
-        -->
-            <li>
-            <a href="{{ route('index', ['user_id' => $user->id]) }}">{{ $user->name }}</a>
-            </li>
-        @endforeach
-    </ul>
     <!-- Lista de chats existentes -->
     <h3>Chats</h3>
     <ul>

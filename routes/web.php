@@ -24,10 +24,15 @@ Route::get('/logout', function() {
     return redirect()->route('auth');
 });
 
-//RUTAS QUE REQUIERE AUTENTICACIÓN
+// RUTAS QUE REQUIEREN AUTENTICACIÓN
 Route::middleware('auth')->group(function(){
-    //PANTALLA DE INICIO (CHAT)
-    Route::get('/index',[ChatController::class, 'showChatForm'])->name('index');
+    // Pantalla de inicio (chat)
+    Route::get('/index', [ChatController::class, 'showChatForm'])->name('index');
+// Cargar la vista completa de búsqueda
+Route::get('/search', [ChatController::class, 'showSearchForm'])->name('search');
+    
+// Búsqueda dinámica con AJAX
+Route::get('/search-users', [ChatController::class, 'searchUsers'])->name('search.users');
     // Ruta para enviar mensajes
     Route::post('/send-message', [ChatController::class, 'sendMessage'])->name('send.message');
     // Llamando al método getMessages del ChatController. la ruta tiene un nombre ('get.messages')
