@@ -116,6 +116,19 @@ $messages = [];
         return redirect()->route('index',['chat_id'=>$chat->id]);
     }
     
+    //Obtener y mostrar los mensajes de manera dinamica
+    public function getMessages(Request $request)
+{
+    //obtener el id del chat desde la solicitud
+    $chatId = $request->chat_id;
+    //Vyscar el chat seleccionado
+    $selectedChat = Chat::find($chatId);
+    //Obtener los mensajes asociados con el chat
+    $messages = $selectedChat->messages()->with('sender')->get();
+    //Retornar la vista parcial con los mensajes
+    return view('partials.chat-messages', compact('messages'));
+}
+
     public function emptyChat($chat_id){
         $chat = Chat::findOrFail($chat_id);
         //Eliminar todos los chat asociados con ese chat
