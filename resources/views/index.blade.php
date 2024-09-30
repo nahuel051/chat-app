@@ -138,7 +138,7 @@
         }
 
         // Intervalo para cargar mensajes automáticamente cada 5 segundos
-        setInterval(loadMessages, 5000);
+        setInterval(loadMessages, 3000);
     });
 </script>
 
