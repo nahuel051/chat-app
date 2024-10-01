@@ -69,9 +69,16 @@ return view('index', compact('users', 'chats', 'selectedChat', 'messages'));
 public function showSearchForm() {
     // Cargar todos los usuarios excepto el autenticado al iniciar la vista
     $users = User::where('id', '!=', auth()->id())->get();
-
+    // Obtener los chats donde participa el usuario autenticado
+    $chats = Chat::where('user_one_id', auth()->id())
+                 ->orWhere('user_two_id', auth()->id())
+                 ->with(['messages' => function($query) {
+                     $query->where('is_read', false)
+                           ->where('user_id', '!=', auth()->id());
+                 }])
+                 ->get();
     // Retornar la vista completa de search.blade.php con la lista inicial de usuarios
-    return view('search', compact('users'));
+    return view('search', compact('users', 'chats'));
 }
 
 public function searchUsers(Request $request) {

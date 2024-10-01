@@ -1,34 +1,7 @@
 @include('header')
 <body>
+<div class="container-index">
 @include('sidebar')
-<b>{{ auth()->user()->name }}</b>
-    <!-- Lista de chats existentes -->
-    <h3>Chats</h3>
-    <ul>
-        @foreach($chats as $chat)
-            <li>
-                <a href="{{ route('index', ['chat_id' => $chat->id]) }}">
-                <!-- $chat->user_one_id == auth()->id(): Este condicional verifica si el usuario autenticado (auth()->id()) es el primer participante del chat (user_one_id). -->
-                    @if($chat->user_one_id == auth()->id())
-                    <!-- Si el usuario autenticado es user_one_id: Muestra el nombre del otro participante del chat, es decir, userTwo. Aquí se utiliza la relación definida en el modelo Chat con el método userTwo(): -->
-                    {{ $chat->userTwo->name }}
-                    @else
-                    <!-- Si el usuario autenticado no es user_one_id: Significa que es el segundo participante del chat, por lo que muestra el nombre del primer usuario (userOne): -->
-                        {{ $chat->userOne->name }}
-                    @endif
-                    {{-- Mostrar la cantidad de mensajes no leídos --}}
-                @php
-                //Cuenta los mensajes no leidos, filtrados anteriormente con el uso de with()
-                    $unreadCount = $chat->messages->count();
-                @endphp
-                <!-- Verifica si mensajes no leidos son mayor a eso, si hay mostrar el mensaje -->
-                @if($unreadCount > 0)
-                    <span>({{ $unreadCount }} no leídos)</span>
-                @endif
-                </a>
-            </li>
-        @endforeach
-    </ul>
     <!-- Si hay un chat seleccionado, mostrar los mensajes -->
     @if($selectedChat)
     <!-- $selectedChat->user_one_id: Es el ID del primer participante del chat (primer usuario que inició el chat).
@@ -66,7 +39,7 @@
 @else
     <p>Selecciona un usuario o chat para comenzar a chatear.</p>
 @endif
-
+</div> <!--container -->
 <script>
      $(document).ready(function() {
         // Manejar envío de mensaje con AJAX
@@ -113,6 +86,27 @@
         // Intervalo para cargar mensajes automáticamente cada 5 segundos
         setInterval(loadMessages, 3000);
     });
+
+    //Responsive
+    const nav = document.querySelector("#navegation");
+        const abrir = document.querySelector("#open");
+        const cerrar = document.querySelector("#close");
+        const cerrarLinks = document.querySelectorAll(".close-link");
+
+        abrir.addEventListener("click", () => {
+            nav.classList.add("visible");
+            console.log("Navegación abierta"); // Agrega un mensaje para depuración
+        });
+
+        cerrar.addEventListener("click", () => {
+            nav.classList.remove("visible");
+        });
+
+        cerrarLinks.forEach(link => {
+            link.addEventListener("click", () => {
+                nav.classList.remove("visible");
+            });
+        });
 </script>
 
 </body>
