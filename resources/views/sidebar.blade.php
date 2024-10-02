@@ -24,7 +24,7 @@
 </ul> <!-- nav-ul -->
     <!-- Lista de chats existentes -->
     <h3>Chats</h3>
-    <ul>
+    <ul class="chat-ul">
         @foreach($chats as $chat)
             <li class="close-link">
                 <a href="{{ route('index', ['chat_id' => $chat->id]) }}">
