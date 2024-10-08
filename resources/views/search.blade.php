@@ -1,7 +1,9 @@
 @include('header')
+<div class="container-index">
 @include('sidebar')
 
 <body>
+    <div class="search-container">
         <!-- Lista de usuarios -->
         <h3>Usuarios disponibles para chatear</h3>
         <!-- Input de búsqueda -->
@@ -15,6 +17,8 @@
             </li>
         @endforeach
     </ul>
+    </div>
+    </div>
 </body>
 <script>
     $(document).ready(function() {
@@ -37,6 +41,27 @@
             });
         });
     });
+     //Responsive
+     const nav = document.querySelector("#navegation");
+        const abrir = document.querySelector("#open");
+        const cerrar = document.querySelector("#close");
+        const cerrarLinks = document.querySelectorAll(".close-link");
+
+        abrir.addEventListener("click", () => {
+            nav.classList.add("visible");
+            console.log("Navegación abierta"); // Agrega un mensaje para depuración
+        });
+
+        cerrar.addEventListener("click", () => {
+            nav.classList.remove("visible");
+        });
+
+        cerrarLinks.forEach(link => {
+            link.addEventListener("click", () => {
+                nav.classList.remove("visible");
+            });
+        });
+
 </script>
 
 </html>

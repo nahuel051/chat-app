@@ -2,28 +2,41 @@
 <body>
 <div class="container-index">
 @include('sidebar')
+<div class="content-index">
+    <div class="index-chat">
     <!-- Si hay un chat seleccionado, mostrar los mensajes -->
     @if($selectedChat)
     <!-- $selectedChat->user_one_id: Es el ID del primer participante del chat (primer usuario que inició el chat).
     $selectedChat->userTwo->name: Si el usuario autenticado es el primer participante (user_one_id), se muestra el nombre del segundo participante del chat (userTwo).
     $selectedChat->userOne->name: Si el usuario autenticado no es el primer participante (es el segundo, user_two_id), entonces se muestra el nombre del primer participante del chat (userOne). -->
-    <h3>Chat con {{ $selectedChat->user_one_id == auth()->id() ? $selectedChat->userTwo->name : $selectedChat->userOne->name }}</h3>
+    <div class="header-chat">
+    <h3>{{ $selectedChat->user_one_id == auth()->id() ? $selectedChat->userTwo->name : $selectedChat->userOne->name }}</h3>
+    <div class="menu-icon" id="menuIcon">⋮</div>
+    <ul class="menu-options" id="menuOptions">
+        <li>
     <!-- Botón para vaciar el chat -->
     <form action="{{ route('chat.empty', $selectedChat->id) }}" method="POST" onsubmit="return confirm('¿Estás seguro de que deseas vaciar este chat?');">
             @csrf
             @method('DELETE')
             <button type="submit">Vaciar Chat</button>
         </form>
-
+        </li>
+        </ul>
+        </div> <!--header-chat-->
     <!-- Mostrar mensajes -->
     <div class="chat-box">
-        @foreach($messages as $message)
-            <p><strong>{{ $message->sender->name }}:</strong> {{ $message->message }}</p>
-        @endforeach
+    @foreach($messages as $message)
+    <div class="chat-bubble {{ $message->sender->id == auth()->id() ? 'sent' : 'received' }}">
+        <strong>{{ $message->sender->name }}</strong>
+        <small>{{ $message->created_at->diffForHumans() }}</small>
+        <p>{{ $message->message }}</p>
     </div>
+    @endforeach
+</div>
+
     
     <!-- Formulario para enviar mensaje -->
-    <form id="chatForm" action="{{ route('send.message') }}" method="POST">
+    <form class="chat-form" id="chatForm" action="{{ route('send.message') }}" method="POST">
         @csrf
         <!-- Se está utilizando para enviar el ID del otro usuario en el chat.
         $selectedChat->user_one_id == auth()->id():
@@ -34,11 +47,14 @@
         Si la condición es falsa (el usuario autenticado es user_two): Se asigna el ID del primer usuario del chat ($selectedChat->user_one_id). -->
         <input type="hidden" name="user_id" value="{{ $selectedChat->user_one_id == auth()->id() ? $selectedChat->user_two_id : $selectedChat->user_one_id }}">
         <textarea name="message" id="messageInput"  placeholder="Escribe tu mensaje" required></textarea>
-        <button type="submit">Enviar</button>
+        <button type="submit"><i class="material-icons">&#xe163;</i>
+        </button>
     </form>
+    </div> <!--index-chat-->
 @else
-    <p>Selecciona un usuario o chat para comenzar a chatear.</p>
+    <p class="select-chat">Selecciona un usuario o chat para comenzar a chatear.</p>
 @endif
+</div><!--content-index-->
 </div> <!--container -->
 <script>
      $(document).ready(function() {
@@ -107,6 +123,29 @@
                 nav.classList.remove("visible");
             });
         });
+
+
+
+            // Obtener los elementos
+const menuIcon = document.getElementById('menuIcon');
+const menuOptions = document.getElementById('menuOptions');
+
+// Agregar un event listener al icono de menú
+menuIcon.addEventListener('click', function() {
+  // Alternar entre mostrar y ocultar el menú
+  if (menuOptions.style.display === 'block') {
+    menuOptions.style.display = 'none';
+  } else {
+    menuOptions.style.display = 'block';
+  }
+});
+
+// Ocultar el menú si se hace clic fuera del menú
+window.addEventListener('click', function(event) {
+  if (!menuIcon.contains(event.target)) {
+    menuOptions.style.display = 'none';
+  }
+});
 </script>
 
 </body>
